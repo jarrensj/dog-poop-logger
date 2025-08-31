@@ -343,102 +343,103 @@ export default function Home() {
             )}
           </div>
 
-          {poopLogs.length > 0 && (
-            <div className="mt-8 sm:mt-12">
-              <div>
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 sm:gap-8">
-                  {/* Calendar */}
-                  <div className="flex justify-center w-full">
-                    <div className="w-full max-w-xs sm:max-w-sm">
-                      <Calendar
-                        mode="single"
-                        selected={selectedDate}
-                        onSelect={setSelectedDate}
-                        modifiers={{
-                          hasLogs: getDatesWithLogs()
-                        }}
-                        modifiersStyles={{
-                          hasLogs: {
-                            backgroundColor: 'var(--accent-green)',
-                            color: 'var(--background)',
-                            fontWeight: '300',
-                            borderRadius: '8px'
-                          }
-                        }}
-                        className="sketch-border soft-shadow bg-[var(--background)] w-full p-2 sm:p-4"
-                      />
-                    </div>
-                  </div>
-                  
-                  {/* Selected Date Logs */}
-                  <div className="">
-                    {selectedDate ? (
-                      <div>
-                        <div className="mb-4 sm:mb-6">
-                          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-3">
-                            <h3 className="text-lg sm:text-xl font-zen font-light text-[var(--foreground)] text-center tracking-wide">
-                              {selectedDate.toLocaleDateString([], { 
-                                weekday: 'long', 
-                                year: 'numeric', 
-                                month: 'long', 
-                                day: 'numeric' 
-                              })}
-                            </h3>
-                            <span className="bg-[var(--accent-light)] text-[var(--foreground)] px-4 py-2 rounded-full text-sm font-light border-[1.5px] border-[var(--border-soft)]">
-                              {getLogsForDate(selectedDate).length} {getLogsForDate(selectedDate).length === 1 ? 'poop' : 'poops'}
-                            </span>
-                          </div>
-                        </div>
-                        
-                        <div className="bg-[var(--accent-light)] sketch-border p-4 sm:p-6 max-h-72 sm:max-h-80 overflow-y-auto softer-shadow">
-                          {getLogsForDate(selectedDate).length > 0 ? (
-                            getLogsForDate(selectedDate).map((log) => {
-                              const { time, relative } = formatDateTime(log.created_at);
-                              return (
-                                <div key={log.id} className="bg-[var(--background)] rounded-sketch p-4 mb-3 softer-shadow border-l-4 border-[var(--accent-green)]">
-                                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
-                                    <div className="flex-1">
-                                      <p className="font-noto font-light text-[var(--foreground)] text-lg">Poop logged!</p>
-                                      <p className="text-lighter text-sm font-noto font-light">at {time}</p>
-                                      <p className="text-lightest text-xs font-noto font-light">{relative}</p>
-                                    </div>
-                                    <button
-                                      onClick={() => openDeleteModal(log.id)}
-                                      className="bg-red-500 hover:bg-red-600 text-white font-noto font-light py-2 px-4 text-sm transition-all duration-300 ease-out min-h-[40px] w-full sm:w-auto sm:ml-4 rounded-lg relative hover:transform hover:translate-y-[-1px] hover:shadow-lg hover:shadow-red-500/20 flex items-center justify-center gap-2 border-0"
-                                    >
-                                      <Trash2 className="w-4 h-4" />
-                                      Delete
-                                    </button>
-                                  </div>
-                                </div>
-                              );
-                            })
-                          ) : (
-                            <div className="text-center py-10">
-                              <p className="text-lightest font-noto font-light text-lg">No logs for this date</p>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="text-center py-16">
-                        <p className="text-lightest text-xl font-noto font-light">Select a date to view logs</p>
-                        <p className="text-lightest text-sm mt-3 font-noto font-light opacity-70">
-                          Dates with logs are highlighted in green
-                        </p>
-                      </div>
-                    )}
+          <div className="mt-8 sm:mt-12">
+            <div>
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 sm:gap-8">
+                {/* Calendar */}
+                <div className="flex justify-center w-full">
+                  <div className="w-full max-w-xs sm:max-w-sm">
+                    <Calendar
+                      mode="single"
+                      selected={selectedDate}
+                      onSelect={setSelectedDate}
+                      modifiers={{
+                        hasLogs: getDatesWithLogs()
+                      }}
+                      modifiersStyles={{
+                        hasLogs: {
+                          backgroundColor: 'var(--accent-green)',
+                          color: 'var(--background)',
+                          fontWeight: '300',
+                          borderRadius: '8px'
+                        }
+                      }}
+                      className="sketch-border soft-shadow bg-[var(--background)] w-full p-2 sm:p-4"
+                    />
                   </div>
                 </div>
                 
-                <div className="mt-8 text-center">
-                  <p className="text-base text-lighter font-noto font-light">
-                    Poops this month: {getPoopsThisMonth()}
-                  </p>
+                {/* Selected Date Logs */}
+                <div className="">
+                  {selectedDate ? (
+                    <div>
+                      <div className="mb-4 sm:mb-6">
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-3">
+                          <h3 className="text-lg sm:text-xl font-zen font-light text-[var(--foreground)] text-center tracking-wide">
+                            {selectedDate.toLocaleDateString([], { 
+                              weekday: 'long', 
+                              year: 'numeric', 
+                              month: 'long', 
+                              day: 'numeric' 
+                            })}
+                          </h3>
+                          <span className="bg-[var(--accent-light)] text-[var(--foreground)] px-4 py-2 rounded-full text-sm font-light border-[1.5px] border-[var(--border-soft)]">
+                            {getLogsForDate(selectedDate).length} {getLogsForDate(selectedDate).length === 1 ? 'poop' : 'poops'}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-[var(--accent-light)] sketch-border p-4 sm:p-6 max-h-72 sm:max-h-80 overflow-y-auto softer-shadow">
+                        {getLogsForDate(selectedDate).length > 0 ? (
+                          getLogsForDate(selectedDate).map((log) => {
+                            const { time, relative } = formatDateTime(log.created_at);
+                            return (
+                              <div key={log.id} className="bg-[var(--background)] rounded-sketch p-4 mb-3 softer-shadow border-l-4 border-[var(--accent-green)]">
+                                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+                                  <div className="flex-1">
+                                    <p className="font-noto font-light text-[var(--foreground)] text-lg">Poop logged!</p>
+                                    <p className="text-lighter text-sm font-noto font-light">at {time}</p>
+                                    <p className="text-lightest text-xs font-noto font-light">{relative}</p>
+                                  </div>
+                                  <button
+                                    onClick={() => openDeleteModal(log.id)}
+                                    className="bg-red-500 hover:bg-red-600 text-white font-noto font-light py-2 px-4 text-sm transition-all duration-300 ease-out min-h-[40px] w-full sm:w-auto sm:ml-4 rounded-lg relative hover:transform hover:translate-y-[-1px] hover:shadow-lg hover:shadow-red-500/20 flex items-center justify-center gap-2 border-0"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                    Delete
+                                  </button>
+                                </div>
+                              </div>
+                            );
+                          })
+                        ) : (
+                          <div className="text-center py-10">
+                            <p className="text-lightest font-noto font-light text-lg">No logs for this date</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-center py-16">
+                      <p className="text-lightest text-xl font-noto font-light">Select a date to view logs</p>
+                      <p className="text-lightest text-sm mt-3 font-noto font-light opacity-70">
+                        {poopLogs.length > 0 
+                          ? "Dates with logs are highlighted in green"
+                          : "Start logging poops to see them highlighted on the calendar"
+                        }
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
+              
+              <div className="mt-8 text-center">
+                <p className="text-base text-lighter font-noto font-light">
+                  Poops this month: {getPoopsThisMonth()}
+                </p>
+              </div>
             </div>
-          )}
+          </div>
         </div>
       </SignedIn>
 

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { SignedIn } from '@clerk/nextjs';
+import { Calendar } from '@/components/ui/calendar';
 
 interface PoopLog {
   id: string;
@@ -17,6 +18,8 @@ export default function Home() {
   const [isAdvancedMode, setIsAdvancedMode] = useState(false);
   const [customDate, setCustomDate] = useState('');
   const [customTime, setCustomTime] = useState('');
+  const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list');
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 
   // Load poop logs from localStorage on component mount
   useEffect(() => {
@@ -108,13 +111,67 @@ export default function Home() {
     return `${Math.floor(diffInMinutes / 1440)}d ago`;
   };
 
+  // Get logs for a specific date
+  const getLogsForDate = (date: Date) => {
+    const dateString = date.toDateString();
+    return poopLogs.filter(log => {
+      const logDate = new Date(log.timestamp);
+      return logDate.toDateString() === dateString;
+    });
+  };
+
+  // Get dates that have logs
+  const getDatesWithLogs = () => {
+    const dates = new Set<string>();
+    poopLogs.forEach(log => {
+      const logDate = new Date(log.timestamp);
+      dates.add(logDate.toDateString());
+    });
+    return Array.from(dates).map(dateString => new Date(dateString));
+  };
+
+  // Check if a date has logs
+  const dateHasLogs = (date: Date) => {
+    const dateString = date.toDateString();
+    return poopLogs.some(log => {
+      const logDate = new Date(log.timestamp);
+      return logDate.toDateString() === dateString;
+    });
+  };
+
   return (
     <main className="min-h-screen p-8 flex flex-col items-center justify-center">
       <h1 className="text-4xl font-bold mb-8 text-gray-800 text-center">dog poop logger</h1>
 
       <SignedIn>
-        <div className="bg-white rounded-lg shadow-lg p-8 max-w-2xl w-full">
+        <div className="bg-white rounded-lg shadow-lg p-8 max-w-4xl w-full">
           <p className="text-lg mb-6 text-gray-600 text-center">Track your dog&apos;s bathroom breaks</p>
+          
+          {/* View Mode Toggle */}
+          <div className="flex justify-center mb-6">
+            <div className="bg-gray-100 rounded-lg p-1 flex">
+              <button
+                onClick={() => setViewMode('list')}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                  viewMode === 'list'
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                List View
+              </button>
+              <button
+                onClick={() => setViewMode('calendar')}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                  viewMode === 'calendar'
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Calendar View
+              </button>
+            </div>
+          </div>
           
           <div className="flex flex-col items-center">
             {/* Advanced Mode Toggle */}
@@ -171,36 +228,130 @@ export default function Home() {
 
           {poopLogs.length > 0 && (
             <div className="mt-8">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-semibold text-gray-800">Recent Logs</h2>
-                <button
-                  onClick={clearLogs}
-                  className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md text-sm transition-colors duration-200"
-                >
-                  Clear All
-                </button>
-              </div>
-              
-              <div className="bg-gray-50 rounded-lg p-4 max-h-96 overflow-y-auto">
-                {poopLogs.map((log) => {
-                  const { date, dayOfWeek, time, relative } = formatDateTime(log.timestamp);
-                  return (
-                    <div key={log.id} className="bg-white rounded-md p-4 mb-3 shadow-sm border-l-4 border-blue-500">
-                      <div className="flex justify-between items-center">
-                        <div className="">
-                          <p className="font-semibold text-gray-800">Poop logged!</p>
-                          <p className="text-gray-600 text-sm">{dayOfWeek}, {date} at {time}</p>
-                          <p className="text-gray-400 text-xs">{relative}</p>
+              {viewMode === 'list' ? (
+                // List View
+                <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-2xl font-semibold text-gray-800">Recent Logs</h2>
+                    <button
+                      onClick={clearLogs}
+                      className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md text-sm transition-colors duration-200"
+                    >
+                      Clear All
+                    </button>
+                  </div>
+                  
+                  <div className="bg-gray-50 rounded-lg p-4 max-h-96 overflow-y-auto">
+                    {poopLogs.map((log) => {
+                      const { date, dayOfWeek, time, relative } = formatDateTime(log.timestamp);
+                      return (
+                        <div key={log.id} className="bg-white rounded-md p-4 mb-3 shadow-sm border-l-4 border-blue-500">
+                          <div className="flex justify-between items-center">
+                            <div className="">
+                              <p className="font-semibold text-gray-800">Poop logged!</p>
+                              <p className="text-gray-600 text-sm">{dayOfWeek}, {date} at {time}</p>
+                              <p className="text-gray-400 text-xs">{relative}</p>
+                            </div>
+                          </div>
                         </div>
-                      </div>
+                      );
+                    })}
+                  </div>
+                  
+                  <p className="text-sm text-gray-500 mt-4">
+                    Total logs: {poopLogs.length}
+                  </p>
+                </div>
+              ) : (
+                // Calendar View
+                <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-2xl font-semibold text-gray-800">Calendar View</h2>
+                    <button
+                      onClick={clearLogs}
+                      className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md text-sm transition-colors duration-200"
+                    >
+                      Clear All
+                    </button>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Calendar */}
+                    <div className="flex justify-center">
+                      <Calendar
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={setSelectedDate}
+                        modifiers={{
+                          hasLogs: getDatesWithLogs()
+                        }}
+                        modifiersStyles={{
+                          hasLogs: {
+                            backgroundColor: '#3b82f6',
+                            color: 'white',
+                            fontWeight: 'bold'
+                          }
+                        }}
+                        className="rounded-md border shadow-sm"
+                      />
                     </div>
-                  );
-                })}
-              </div>
-              
-              <p className="text-sm text-gray-500 mt-4">
-                Total logs: {poopLogs.length}
-              </p>
+                    
+                    {/* Selected Date Logs */}
+                    <div className="">
+                      {selectedDate ? (
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-800 mb-3">
+                            Logs for {selectedDate.toLocaleDateString([], { 
+                              weekday: 'long', 
+                              year: 'numeric', 
+                              month: 'long', 
+                              day: 'numeric' 
+                            })}
+                          </h3>
+                          
+                          <div className="bg-gray-50 rounded-lg p-4 max-h-80 overflow-y-auto">
+                            {getLogsForDate(selectedDate).length > 0 ? (
+                              getLogsForDate(selectedDate).map((log) => {
+                                const { time, relative } = formatDateTime(log.timestamp);
+                                return (
+                                  <div key={log.id} className="bg-white rounded-md p-3 mb-2 shadow-sm border-l-4 border-blue-500">
+                                    <div className="">
+                                      <p className="font-semibold text-gray-800">Poop logged!</p>
+                                      <p className="text-gray-600 text-sm">at {time}</p>
+                                      <p className="text-gray-400 text-xs">{relative}</p>
+                                    </div>
+                                  </div>
+                                );
+                              })
+                            ) : (
+                              <div className="text-center py-8">
+                                <p className="text-gray-500">No logs for this date</p>
+                              </div>
+                            )}
+                          </div>
+                          
+                          <p className="text-sm text-gray-500 mt-3">
+                            {getLogsForDate(selectedDate).length} log(s) for this date
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="text-center py-12">
+                          <p className="text-gray-500 text-lg">Select a date to view logs</p>
+                          <p className="text-gray-400 text-sm mt-2">
+                            Dates with logs are highlighted in blue
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="mt-6 text-center">
+                    <p className="text-sm text-gray-500">
+                      Total logs: {poopLogs.length} | Dates with logs: {getDatesWithLogs().length}
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

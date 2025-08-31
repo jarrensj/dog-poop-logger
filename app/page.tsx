@@ -5,6 +5,8 @@ import { SignedIn } from '@clerk/nextjs';
 
 interface PoopLog {
   id: string;
+  userId: string;
+  name: string;
   timestamp: string;
 }
 
@@ -26,6 +28,8 @@ export default function Home() {
     const now = new Date();
     const newLog: PoopLog = {
       id: Date.now().toString(),
+      userId: 'user1', // TODO
+      name: 'dog1', // TODO
       timestamp: now.toISOString()
     };
 

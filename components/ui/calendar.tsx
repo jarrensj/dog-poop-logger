@@ -29,7 +29,7 @@ function Calendar({
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn(
-        "bg-background group/calendar p-3 [--cell-size:--spacing(8)] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent",
+        "bg-[var(--background)] group/calendar p-2 sm:p-4 [--cell-size:theme(spacing.8)] sm:[--cell-size:theme(spacing.10)] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent font-noto font-light",
         String.raw`rtl:**:[.rdp-button\_next>svg]:rotate-180`,
         String.raw`rtl:**:[.rdp-button\_previous>svg]:rotate-180`,
         className
@@ -87,7 +87,7 @@ function Calendar({
         table: "w-full border-collapse",
         weekdays: cn("flex", defaultClassNames.weekdays),
         weekday: cn(
-          "text-muted-foreground rounded-md flex-1 font-normal text-[0.8rem] select-none",
+          "text-lightest rounded-md flex-1 font-noto font-light text-[0.8rem] select-none",
           defaultClassNames.weekday
         ),
         week: cn("flex w-full mt-2", defaultClassNames.week),
@@ -110,15 +110,15 @@ function Calendar({
         range_middle: cn("rounded-none", defaultClassNames.range_middle),
         range_end: cn("rounded-r-md bg-accent", defaultClassNames.range_end),
         today: cn(
-          "bg-accent text-accent-foreground rounded-md data-[selected=true]:rounded-none",
+          "bg-[var(--accent-light)] text-[var(--foreground)] rounded-sketch data-[selected=true]:rounded-none border-[1.5px] border-[var(--border-soft)]",
           defaultClassNames.today
         ),
         outside: cn(
-          "text-muted-foreground/40 opacity-50 aria-selected:text-muted-foreground/40 hover:text-muted-foreground/60",
+          "text-lightest opacity-40 aria-selected:text-lightest hover:text-lighter",
           defaultClassNames.outside
         ),
         disabled: cn(
-          "text-muted-foreground opacity-50",
+          "text-lightest opacity-40",
           defaultClassNames.disabled
         ),
         hidden: cn("invisible", defaultClassNames.hidden),
@@ -201,7 +201,7 @@ function CalendarDayButton({
       data-range-end={modifiers.range_end}
       data-range-middle={modifiers.range_middle}
       className={cn(
-        "data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground data-[range-middle=true]:bg-accent data-[range-middle=true]:text-accent-foreground data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 dark:hover:text-accent-foreground flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70",
+        "data-[selected-single=true]:border-[1.5px] data-[selected-single=true]:border-[var(--accent-green)] data-[range-middle=true]:bg-[var(--accent-light)] data-[range-middle=true]:text-[var(--foreground)] data-[range-start=true]:bg-[var(--accent-green)] data-[range-start=true]:text-[var(--background)] data-[range-end=true]:bg-[var(--accent-green)] data-[range-end=true]:text-[var(--background)] group-data-[focused=true]/day:border-[var(--accent-green)] group-data-[focused=true]/day:ring-[var(--accent-green)]/30 hover:text-[var(--foreground)] flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 leading-none font-noto font-light group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[2px] data-[range-end=true]:rounded-sketch data-[range-end=true]:rounded-r-sketch data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-sketch data-[range-start=true]:rounded-l-sketch [&>span]:text-xs [&>span]:opacity-70 hover:bg-[var(--accent-lighter)] transition-all duration-300 ease-out border border-transparent",
         defaultClassNames.day,
         className
       )}

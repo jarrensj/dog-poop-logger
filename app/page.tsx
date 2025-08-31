@@ -63,20 +63,35 @@ export default function Home() {
   useEffect(() => {
     if (isAdvancedMode && !customDate && !customTime) {
       const now = new Date();
+      // Use selected date if available, otherwise use current date
+      const dateToUse = selectedDate || now;
+      
       // Use local date methods to avoid timezone issues
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const day = String(now.getDate()).padStart(2, '0');
-      const today = `${year}-${month}-${day}`; // YYYY-MM-DD format
+      const year = dateToUse.getFullYear();
+      const month = String(dateToUse.getMonth() + 1).padStart(2, '0');
+      const day = String(dateToUse.getDate()).padStart(2, '0');
+      const dateString = `${year}-${month}-${day}`; // YYYY-MM-DD format
       
       const hours = String(now.getHours()).padStart(2, '0');
       const minutes = String(now.getMinutes()).padStart(2, '0');
       const currentTime = `${hours}:${minutes}`; // HH:MM format
       
-      setCustomDate(today);
+      setCustomDate(dateString);
       setCustomTime(currentTime);
     }
-  }, [isAdvancedMode, customDate, customTime]);
+  }, [isAdvancedMode, customDate, customTime, selectedDate]);
+
+  // Update custom date when selected date changes (if advanced mode is active)
+  useEffect(() => {
+    if (isAdvancedMode && selectedDate) {
+      const year = selectedDate.getFullYear();
+      const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+      const day = String(selectedDate.getDate()).padStart(2, '0');
+      const dateString = `${year}-${month}-${day}`; // YYYY-MM-DD format
+      
+      setCustomDate(dateString);
+    }
+  }, [selectedDate, isAdvancedMode]);
 
   const logPoop = async () => {
     if (!user) {

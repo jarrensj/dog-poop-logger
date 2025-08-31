@@ -53,6 +53,7 @@ export default function Home() {
     const date = new Date(timestamp);
     return {
       date: date.toLocaleDateString(),
+      dayOfWeek: date.toLocaleDateString([], { weekday: 'long' }),
       time: date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       relative: getRelativeTime(date)
     };
@@ -100,13 +101,13 @@ export default function Home() {
               
               <div className="bg-gray-50 rounded-lg p-4 max-h-96 overflow-y-auto">
                 {poopLogs.map((log) => {
-                  const { date, time, relative } = formatDateTime(log.timestamp);
+                  const { date, dayOfWeek, time, relative } = formatDateTime(log.timestamp);
                   return (
                     <div key={log.id} className="bg-white rounded-md p-4 mb-3 shadow-sm border-l-4 border-blue-500">
                       <div className="flex justify-between items-center">
                         <div className="">
                           <p className="font-semibold text-gray-800">Poop logged!</p>
-                          <p className="text-gray-600 text-sm">{date} at {time}</p>
+                          <p className="text-gray-600 text-sm">{dayOfWeek}, {date} at {time}</p>
                           <p className="text-gray-400 text-xs">{relative}</p>
                         </div>
                       </div>

@@ -14,6 +14,9 @@ interface PoopLog {
 export default function Home() {
   const [poopLogs, setPoopLogs] = useState<PoopLog[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isAdvancedMode, setIsAdvancedMode] = useState(false);
+  const [customDate, setCustomDate] = useState('');
+  const [customTime, setCustomTime] = useState('');
 
   // Load poop logs from localStorage on component mount
   useEffect(() => {
@@ -23,20 +26,56 @@ export default function Home() {
     }
   }, []);
 
+  // Set default date and time when advanced mode is enabled
+  useEffect(() => {
+    if (isAdvancedMode && !customDate && !customTime) {
+      const now = new Date();
+      // Use local date methods to avoid timezone issues
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const today = `${year}-${month}-${day}`; // YYYY-MM-DD format
+      
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const currentTime = `${hours}:${minutes}`; // HH:MM format
+      
+      setCustomDate(today);
+      setCustomTime(currentTime);
+    }
+  }, [isAdvancedMode, customDate, customTime]);
+
   const logPoop = () => {
     setIsLoading(true);
     
-    const now = new Date();
+    let logTimestamp: Date;
+    
+    if (isAdvancedMode && customDate && customTime) {
+      // Use custom date and time
+      const customDateTime = new Date(`${customDate}T${customTime}`);
+      logTimestamp = customDateTime;
+    } else {
+      // Use current date and time
+      logTimestamp = new Date();
+    }
+    
     const newLog: PoopLog = {
       id: Date.now().toString(),
       userId: 'user1', // TODO
       name: 'dog1', // TODO
-      timestamp: now.toISOString()
+      timestamp: logTimestamp.toISOString()
     };
 
     const updatedLogs = [newLog, ...poopLogs];
     setPoopLogs(updatedLogs);
     localStorage.setItem('poopLogs', JSON.stringify(updatedLogs));
+
+    // Reset advanced mode inputs after logging
+    if (isAdvancedMode) {
+      setCustomDate('');
+      setCustomTime('');
+      setIsAdvancedMode(false);
+    }
 
     // Reset loading state
     setTimeout(() => {
@@ -77,10 +116,53 @@ export default function Home() {
         <div className="bg-white rounded-lg shadow-lg p-8 max-w-2xl w-full">
           <p className="text-lg mb-6 text-gray-600 text-center">Track your dog&apos;s bathroom breaks</p>
           
-          <div className="flex justify-center">
+          <div className="flex flex-col items-center">
+            {/* Advanced Mode Toggle */}
+            <div className="mb-4">
+              <label className="flex items-center space-x-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={isAdvancedMode}
+                  onChange={(e) => setIsAdvancedMode(e.target.checked)}
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <span className="text-sm text-gray-600">Advanced (Custom Date & Time)</span>
+              </label>
+            </div>
+
+            {/* Advanced Mode Inputs */}
+            {isAdvancedMode && (
+              <div className="mb-4 p-4 bg-gray-50 rounded-lg border">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Date
+                    </label>
+                    <input
+                      type="date"
+                      value={customDate}
+                      onChange={(e) => setCustomDate(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Time
+                    </label>
+                    <input
+                      type="time"
+                      value={customTime}
+                      onChange={(e) => setCustomTime(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
             <button
               onClick={logPoop}
-              disabled={isLoading}
+              disabled={isLoading || (isAdvancedMode && (!customDate || !customTime))}
               className="bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-bold py-4 px-8 rounded-lg text-xl transition-colors duration-200 mb-8 shadow-md hover:shadow-lg transform hover:scale-105 disabled:transform-none"
             >
               {isLoading ? 'Logging...' : 'Log Poop'}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { SignedIn, useUser } from '@clerk/nextjs';
+import { SignedIn, SignedOut, useUser } from '@clerk/nextjs';
 import { Calendar } from '@/components/ui/calendar';
 import { Plus, Trash2, Calendar as CalendarIcon, Clock } from 'lucide-react';
 
@@ -33,8 +33,13 @@ export default function Home() {
 
   // Load poop logs when user is loaded
   useEffect(() => {
-    if (isLoaded && user) {
-      loadPoopLogs();
+    if (isLoaded) {
+      if (user) {
+        loadPoopLogs();
+      } else {
+        // User is not signed in, stop loading
+        setIsLoadingData(false);
+      }
     }
   }, [isLoaded, user]);
 
@@ -457,6 +462,24 @@ export default function Home() {
           </div>
         </div>
       </SignedIn>
+
+      <SignedOut>
+        <div className="bg-[var(--background)] sketch-border soft-shadow p-6 sm:p-8 md:p-12 max-w-4xl w-full mx-4 sm:mx-0 fade-in">
+          <div className="text-center py-16">
+            <p className="text-xl sm:text-2xl text-lighter font-noto font-light mb-6">
+              dog poop logger
+            </p>
+            <p className="text-base text-lighter font-noto font-light mb-8 leading-relaxed">
+              Sign in to start tracking your dog&apos;s bathroom habits!
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <p className="text-sm text-lightest font-noto font-light">
+                Ready to get started? Sign in or create an account using the buttons in the top right corner.
+              </p>
+            </div>
+          </div>
+        </div>
+      </SignedOut>
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (

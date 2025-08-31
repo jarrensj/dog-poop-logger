@@ -204,6 +204,14 @@ export default function Home() {
           </div>
           
           <div className="flex flex-col items-center">
+            <button
+              onClick={logPoop}
+              disabled={isLoading || (isAdvancedMode && (!customDate || !customTime))}
+              className="bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-bold py-4 px-8 rounded-lg text-xl transition-colors duration-200 mb-6 shadow-md hover:shadow-lg transform hover:scale-105 disabled:transform-none"
+            >
+              {isLoading ? 'Logging...' : 'Log Poop'}
+            </button>
+
             {/* Advanced Mode Toggle */}
             <div className="mb-4">
               <label className="flex items-center space-x-2 cursor-pointer">
@@ -219,7 +227,7 @@ export default function Home() {
 
             {/* Advanced Mode Inputs */}
             {isAdvancedMode && (
-              <div className="mb-4 p-4 bg-gray-50 rounded-lg border">
+              <div className="mb-8 p-4 bg-gray-50 rounded-lg border">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -246,14 +254,6 @@ export default function Home() {
                 </div>
               </div>
             )}
-
-            <button
-              onClick={logPoop}
-              disabled={isLoading || (isAdvancedMode && (!customDate || !customTime))}
-              className="bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-bold py-4 px-8 rounded-lg text-xl transition-colors duration-200 mb-8 shadow-md hover:shadow-lg transform hover:scale-105 disabled:transform-none"
-            >
-              {isLoading ? 'Logging...' : 'Log Poop'}
-            </button>
           </div>
 
           {poopLogs.length > 0 && (

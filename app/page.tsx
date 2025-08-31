@@ -88,10 +88,7 @@ export default function Home() {
     }, 500); // 500ms
   };
 
-  const clearLogs = () => {
-    setPoopLogs([]);
-    localStorage.removeItem('poopLogs');
-  };
+
 
   const openDeleteModal = (logId: string) => {
     setLogToDelete(logId);
@@ -252,14 +249,8 @@ export default function Home() {
               {viewMode === 'list' ? (
                 // List View
                 <div>
-                  <div className="flex justify-between items-center mb-4">
+                  <div className="mb-4">
                     <h2 className="text-2xl font-semibold text-gray-800">Recent Logs</h2>
-                    <button
-                      onClick={clearLogs}
-                      className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md text-sm transition-colors duration-200"
-                    >
-                      Clear All
-                    </button>
                   </div>
                   
                   <div className="bg-gray-50 rounded-lg p-4 max-h-96 overflow-y-auto">
@@ -292,14 +283,8 @@ export default function Home() {
               ) : (
                 // Calendar View
                 <div>
-                  <div className="flex justify-between items-center mb-4">
+                  <div className="mb-4">
                     <h2 className="text-2xl font-semibold text-gray-800">Calendar View</h2>
-                    <button
-                      onClick={clearLogs}
-                      className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md text-sm transition-colors duration-200"
-                    >
-                      Clear All
-                    </button>
                   </div>
                   
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

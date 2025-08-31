@@ -20,6 +20,8 @@ export default function Home() {
   const [customTime, setCustomTime] = useState('');
   const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list');
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [logToDelete, setLogToDelete] = useState<string | null>(null);
 
   // Load poop logs from localStorage on component mount
   useEffect(() => {
@@ -91,10 +93,23 @@ export default function Home() {
     localStorage.removeItem('poopLogs');
   };
 
-  const deleteLog = (logId: string) => {
-    const updatedLogs = poopLogs.filter(log => log.id !== logId);
-    setPoopLogs(updatedLogs);
-    localStorage.setItem('poopLogs', JSON.stringify(updatedLogs));
+  const openDeleteModal = (logId: string) => {
+    setLogToDelete(logId);
+    setShowDeleteModal(true);
+  };
+
+  const closeDeleteModal = () => {
+    setShowDeleteModal(false);
+    setLogToDelete(null);
+  };
+
+  const confirmDelete = () => {
+    if (logToDelete) {
+      const updatedLogs = poopLogs.filter(log => log.id !== logToDelete);
+      setPoopLogs(updatedLogs);
+      localStorage.setItem('poopLogs', JSON.stringify(updatedLogs));
+    }
+    closeDeleteModal();
   };
 
   const formatDateTime = (timestamp: string) => {
@@ -259,7 +274,7 @@ export default function Home() {
                               <p className="text-gray-400 text-xs">{relative}</p>
                             </div>
                             <button
-                              onClick={() => deleteLog(log.id)}
+                              onClick={() => openDeleteModal(log.id)}
                               className="ml-4 bg-red-500 hover:bg-red-600 text-white font-medium py-1 px-3 rounded text-sm transition-colors duration-200"
                             >
                               Delete
@@ -334,7 +349,7 @@ export default function Home() {
                                         <p className="text-gray-400 text-xs">{relative}</p>
                                       </div>
                                       <button
-                                        onClick={() => deleteLog(log.id)}
+                                        onClick={() => openDeleteModal(log.id)}
                                         className="ml-4 bg-red-500 hover:bg-red-600 text-white font-medium py-1 px-3 rounded text-sm transition-colors duration-200"
                                       >
                                         Delete
@@ -376,6 +391,34 @@ export default function Home() {
           )}
         </div>
       </SignedIn>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-gray-100 bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-sm w-full mx-4 shadow-xl">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Delete Poop Log?
+            </h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete this poop log? This action cannot be undone.
+            </p>
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={closeDeleteModal}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium transition-colors duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-medium rounded transition-colors duration-200"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

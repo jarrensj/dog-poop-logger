@@ -18,7 +18,7 @@ export default function Home() {
   const [isAdvancedMode, setIsAdvancedMode] = useState(false);
   const [customDate, setCustomDate] = useState('');
   const [customTime, setCustomTime] = useState('');
-  const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list');
+  const [viewMode, setViewMode] = useState<'list' | 'calendar'>('calendar');
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [logToDelete, setLogToDelete] = useState<string | null>(null);
@@ -181,16 +181,6 @@ export default function Home() {
           <div className="flex justify-center mb-6">
             <div className="bg-gray-100 rounded-lg p-1 flex">
               <button
-                onClick={() => setViewMode('list')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                  viewMode === 'list'
-                    ? 'bg-white text-gray-900 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                List View
-              </button>
-              <button
                 onClick={() => setViewMode('calendar')}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
                   viewMode === 'calendar'
@@ -199,6 +189,16 @@ export default function Home() {
                 }`}
               >
                 Calendar View
+              </button>
+              <button
+                onClick={() => setViewMode('list')}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                  viewMode === 'list'
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                List View
               </button>
             </div>
           </div>

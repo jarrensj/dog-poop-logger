@@ -91,6 +91,12 @@ export default function Home() {
     localStorage.removeItem('poopLogs');
   };
 
+  const deleteLog = (logId: string) => {
+    const updatedLogs = poopLogs.filter(log => log.id !== logId);
+    setPoopLogs(updatedLogs);
+    localStorage.setItem('poopLogs', JSON.stringify(updatedLogs));
+  };
+
   const formatDateTime = (timestamp: string) => {
     const date = new Date(timestamp);
     return {
@@ -252,6 +258,12 @@ export default function Home() {
                               <p className="text-gray-600 text-sm">{dayOfWeek}, {date} at {time}</p>
                               <p className="text-gray-400 text-xs">{relative}</p>
                             </div>
+                            <button
+                              onClick={() => deleteLog(log.id)}
+                              className="ml-4 bg-red-500 hover:bg-red-600 text-white font-medium py-1 px-3 rounded text-sm transition-colors duration-200"
+                            >
+                              Delete
+                            </button>
                           </div>
                         </div>
                       );
@@ -315,10 +327,18 @@ export default function Home() {
                                 const { time, relative } = formatDateTime(log.timestamp);
                                 return (
                                   <div key={log.id} className="bg-white rounded-md p-3 mb-2 shadow-sm border-l-4 border-blue-500">
-                                    <div className="">
-                                      <p className="font-semibold text-gray-800">Poop logged!</p>
-                                      <p className="text-gray-600 text-sm">at {time}</p>
-                                      <p className="text-gray-400 text-xs">{relative}</p>
+                                    <div className="flex justify-between items-center">
+                                      <div className="">
+                                        <p className="font-semibold text-gray-800">Poop logged!</p>
+                                        <p className="text-gray-600 text-sm">at {time}</p>
+                                        <p className="text-gray-400 text-xs">{relative}</p>
+                                      </div>
+                                      <button
+                                        onClick={() => deleteLog(log.id)}
+                                        className="ml-4 bg-red-500 hover:bg-red-600 text-white font-medium py-1 px-3 rounded text-sm transition-colors duration-200"
+                                      >
+                                        Delete
+                                      </button>
                                     </div>
                                   </div>
                                 );

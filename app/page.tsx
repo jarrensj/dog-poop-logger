@@ -157,6 +157,18 @@ export default function Home() {
     });
   };
 
+  // Get poops for current month
+  const getPoopsThisMonth = () => {
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+    
+    return poopLogs.filter(log => {
+      const logDate = new Date(log.timestamp);
+      return logDate.getMonth() === currentMonth && logDate.getFullYear() === currentYear;
+    }).length;
+  };
+
   return (
     <main className="min-h-screen p-8 flex flex-col items-center justify-center">
       <h1 className="text-4xl font-bold mb-8 text-gray-800 text-center">dog poop logger</h1>
@@ -370,7 +382,7 @@ export default function Home() {
                   
                   <div className="mt-6 text-center">
                     <p className="text-sm text-gray-500">
-                      Total logs: {poopLogs.length} | Dates with logs: {getDatesWithLogs().length}
+                      Poops this month: {getPoopsThisMonth()}
                     </p>
                   </div>
                 </div>

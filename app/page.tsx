@@ -22,6 +22,7 @@ export default function Home() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [logToDelete, setLogToDelete] = useState<string | null>(null);
+  const [isCelebrating, setIsCelebrating] = useState(false);
 
   // Load poop logs from localStorage on component mount
   useEffect(() => {
@@ -52,6 +53,7 @@ export default function Home() {
 
   const logPoop = () => {
     setIsLoading(true);
+    setIsCelebrating(true);
     
     let logTimestamp: Date;
     
@@ -86,6 +88,11 @@ export default function Home() {
     setTimeout(() => {
       setIsLoading(false);
     }, 500); // 500ms
+    
+    // Reset celebration animation
+    setTimeout(() => {
+      setIsCelebrating(false);
+    }, 1200); // 1.2s for full animation
   };
 
 
@@ -176,14 +183,26 @@ export default function Home() {
         <div className="bg-[var(--background)] sketch-border soft-shadow p-6 sm:p-8 md:p-12 max-w-4xl w-full mx-4 sm:mx-0 fade-in">
           <p className="text-lg sm:text-xl mb-6 sm:mb-8 text-lighter text-center font-noto font-light">Track your dog&apos;s poops</p>
           <div className="flex flex-col items-center">
-            <button
-              onClick={logPoop}
-              disabled={isLoading || (isAdvancedMode && (!customDate || !customTime))}
-              className="bg-[var(--accent-green)] hover:bg-[var(--accent-green-hover)] disabled:bg-[var(--foreground-lighter)] text-[var(--background)] font-noto font-light py-4 px-8 sm:py-5 sm:px-10 text-lg sm:text-xl transition-all duration-300 ease-out mb-4 w-full sm:w-auto min-h-[56px] rounded-xl relative hover:transform hover:translate-y-[-1px] hover:shadow-lg hover:shadow-[var(--accent-green)]/20 flex items-center justify-center gap-2 border-0"
-            >
-              <Plus className="w-5 h-5" />
-              {isLoading ? 'Logging...' : 'Log Poop'}
-            </button>
+            <div className="relative">
+              <button
+                onClick={logPoop}
+                disabled={isLoading || (isAdvancedMode && (!customDate || !customTime))}
+                className={`bg-[var(--accent-green)] hover:bg-[var(--accent-green-hover)] disabled:bg-[var(--foreground-lighter)] text-[var(--background)] font-noto font-light py-4 px-8 sm:py-5 sm:px-10 text-lg sm:text-xl transition-all duration-300 ease-out mb-4 w-full sm:w-auto min-h-[56px] rounded-xl relative hover:transform hover:translate-y-[-1px] hover:shadow-lg hover:shadow-[var(--accent-green)]/20 flex items-center justify-center gap-2 border-0 ${isCelebrating ? 'celebrate-button' : ''}`}
+              >
+                {isLoading ? 'Logging...' : 'Log Poop'}
+              </button>
+              
+              {/* Celebration particles */}
+              {isCelebrating && (
+                <>
+                  <div className="celebration-particle"></div>
+                  <div className="celebration-particle"></div>
+                  <div className="celebration-particle"></div>
+                  <div className="celebration-particle"></div>
+                  <div className="celebration-particle"></div>
+                </>
+              )}
+            </div>
 
             {/* Subtle Advanced Mode Toggle */}
             <div className="mb-8 sm:mb-10">

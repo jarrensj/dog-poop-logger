@@ -95,3 +95,72 @@ body {
     transform: translateY(0);
   }
 }
+
+/* Celebration animation for Log Poop button */
+@keyframes celebrate {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  15% {
+    transform: scale(1.15) rotate(-2deg);
+  }
+  30% {
+    transform: scale(1.25) rotate(2deg);
+  }
+  45% {
+    transform: scale(1.1) rotate(-1deg);
+  }
+  60% {
+    transform: scale(1.2) rotate(1deg);
+  }
+  75% {
+    transform: scale(1.05) rotate(-0.5deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 var(--accent-green);
+  }
+  50% {
+    box-shadow: 0 0 0 15px rgba(143, 185, 150, 0.2);
+  }
+}
+
+.celebrate-button {
+  animation: celebrate 0.8s ease-out, pulse-glow 1.2s ease-out;
+}
+
+/* Floating particles animation */
+@keyframes float-up {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(0);
+  }
+  10% {
+    transform: translateY(-10px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-100px) scale(0.5);
+  }
+}
+
+.celebration-particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--accent-green);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: float-up 1.5s ease-out forwards;
+}
+
+.celebration-particle:nth-child(1) { left: 20%; animation-delay: 0.1s; background: #FFD700; }
+.celebration-particle:nth-child(2) { left: 80%; animation-delay: 0.2s; background: #FF6B6B; }
+.celebration-particle:nth-child(3) { left: 50%; animation-delay: 0.3s; background: #4ECDC4; }
+.celebration-particle:nth-child(4) { left: 30%; animation-delay: 0.4s; background: #45B7D1; }
+.celebration-particle:nth-child(5) { left: 70%; animation-delay: 0.5s; background: #96CEB4; }

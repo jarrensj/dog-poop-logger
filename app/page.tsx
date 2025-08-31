@@ -327,14 +327,21 @@ export default function Home() {
                     <div className="">
                       {selectedDate ? (
                         <div>
-                          <h3 className="text-lg font-semibold text-gray-800 mb-3">
-                            Logs for {selectedDate.toLocaleDateString([], { 
-                              weekday: 'long', 
-                              year: 'numeric', 
-                              month: 'long', 
-                              day: 'numeric' 
-                            })}
-                          </h3>
+                          <div className="mb-4">
+                            <div className="flex items-center justify-center gap-3 mb-2">
+                              <h3 className="text-lg font-semibold text-gray-800">
+                                {selectedDate.toLocaleDateString([], { 
+                                  weekday: 'long', 
+                                  year: 'numeric', 
+                                  month: 'long', 
+                                  day: 'numeric' 
+                                })}
+                              </h3>
+                              <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm font-medium">
+                                {getLogsForDate(selectedDate).length} {getLogsForDate(selectedDate).length === 1 ? 'poop' : 'poops'}
+                              </span>
+                            </div>
+                          </div>
                           
                           <div className="bg-gray-50 rounded-lg p-4 max-h-80 overflow-y-auto">
                             {getLogsForDate(selectedDate).length > 0 ? (
@@ -364,10 +371,6 @@ export default function Home() {
                               </div>
                             )}
                           </div>
-                          
-                          <p className="text-sm text-gray-500 mt-3">
-                            {getLogsForDate(selectedDate).length} log(s) for this date
-                          </p>
                         </div>
                       ) : (
                         <div className="text-center py-12">

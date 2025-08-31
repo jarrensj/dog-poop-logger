@@ -7,6 +7,7 @@ interface PoopLog {
   id: string;
   userId: string;
   name: string;
+  location?: string;
   timestamp: string;
 }
 

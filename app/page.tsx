@@ -182,22 +182,19 @@ export default function Home() {
             <button
               onClick={logPoop}
               disabled={isLoading || (isAdvancedMode && (!customDate || !customTime))}
-              className="bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-bold py-3 px-6 sm:py-4 sm:px-8 rounded-lg text-lg sm:text-xl transition-colors duration-200 mb-4 sm:mb-6 shadow-md hover:shadow-lg transform hover:scale-105 disabled:transform-none w-full sm:w-auto min-h-[48px]"
+              className="bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-bold py-3 px-6 sm:py-4 sm:px-8 rounded-lg text-lg sm:text-xl transition-colors duration-200 mb-3 shadow-md hover:shadow-lg transform hover:scale-105 disabled:transform-none w-full sm:w-auto min-h-[48px]"
             >
               {isLoading ? 'Logging...' : 'Log Poop'}
             </button>
 
-            {/* Advanced Mode Toggle */}
-            <div className="mb-4">
-              <label className="flex items-center space-x-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={isAdvancedMode}
-                  onChange={(e) => setIsAdvancedMode(e.target.checked)}
-                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                />
-                <span className="text-sm text-gray-600">Advanced (Custom Date & Time)</span>
-              </label>
+            {/* Subtle Advanced Mode Toggle */}
+            <div className="mb-6 sm:mb-8">
+              <button
+                onClick={() => setIsAdvancedMode(!isAdvancedMode)}
+                className="text-xs text-gray-400 hover:text-gray-600 transition-colors duration-200 px-2 py-1"
+              >
+                {isAdvancedMode ? '× Cancel custom time' : 'Log for a different time?'}
+              </button>
             </div>
 
             {/* Advanced Mode Inputs */}

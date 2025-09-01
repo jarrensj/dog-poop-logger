@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useUser } from '@clerk/nextjs';
+import { apiCache } from '@/lib/cache';
 
 export interface PoopLog {
   id: string;
@@ -24,10 +25,24 @@ export const usePoopLogs = () => {
       setIsLoadingData(true);
       setError(null);
 
+      // Check cache first
+      const cacheKey = `poops_${user?.id}`;
+      const cachedData = apiCache.get(cacheKey);
+      
+      if (cachedData) {
+        setPoopLogs(cachedData);
+        setIsLoadingData(false);
+        return;
+      }
+
       const logsResponse = await fetch('/api/poops');
       if (logsResponse.ok) {
         const logsData = await logsResponse.json();
-        setPoopLogs(logsData.poops || []);
+        const poops = logsData.poops || [];
+        setPoopLogs(poops);
+        
+        // Cache the data for 3 hours
+        apiCache.set(cacheKey, poops, 3 * 60);
       } else {
         setError('Failed to load poop logs. Please refresh the page.');
       }
@@ -65,6 +80,10 @@ export const usePoopLogs = () => {
       if (response.ok) {
         const data = await response.json();
         setPoopLogs(prevLogs => [data.poop, ...prevLogs]);
+        
+        // Invalidate cache since we have new data
+        apiCache.invalidate(`poops_${user.id}`);
+        
         return true;
       } else {
         const errorData = await response.json();
@@ -89,6 +108,10 @@ export const usePoopLogs = () => {
 
       if (response.ok) {
         setPoopLogs(prevLogs => prevLogs.filter(log => log.id !== logId));
+        
+        // Invalidate cache since we deleted data
+        apiCache.invalidate(`poops_${user?.id}`);
+        
         return true;
       } else {
         const errorData = await response.json();

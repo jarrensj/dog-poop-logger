@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useUser } from '@clerk/nextjs';
+import { apiCache } from '@/lib/cache';
 
 export interface Dog {
   id: string;
@@ -32,10 +33,24 @@ export const useDogs = () => {
       setIsLoading(true);
       setError(null);
 
+      // Check cache first
+      const cacheKey = `dogs_${user?.id}`;
+      const cachedData = apiCache.get(cacheKey);
+      
+      if (cachedData) {
+        setDogs(cachedData);
+        setIsLoading(false);
+        return;
+      }
+
       const response = await fetch('/api/dogs');
       if (response.ok) {
         const data = await response.json();
-        setDogs(data.dogs || []);
+        const dogs = data.dogs || [];
+        setDogs(dogs);
+        
+        // Cache for 30 days
+        apiCache.set(cacheKey, dogs, 30 * 24 * 60);
       } else {
         setError('Failed to load dogs');
       }
@@ -61,6 +76,10 @@ export const useDogs = () => {
       if (response.ok) {
         const data = await response.json();
         setDogs(prevDogs => [...prevDogs, data.dog]);
+        
+        // Invalidate cache since we added a dog
+        apiCache.invalidate(`dogs_${user?.id}`);
+        
         return data.dog;
       } else {
         const errorData = await response.json();
@@ -90,6 +109,10 @@ export const useDogs = () => {
         setDogs(prevDogs => prevDogs.map(dog => 
           dog.id === id ? data.dog : dog
         ));
+        
+        // Invalidate cache since we updated a dog
+        apiCache.invalidate(`dogs_${user?.id}`);
+        
         return data.dog;
       } else {
         const errorData = await response.json();
@@ -112,6 +135,10 @@ export const useDogs = () => {
 
       if (response.ok) {
         setDogs(prevDogs => prevDogs.filter(dog => dog.id !== id));
+        
+        // Invalidate cache since we deleted a dog
+        apiCache.invalidate(`dogs_${user?.id}`);
+        
         return true;
       } else {
         const errorData = await response.json();

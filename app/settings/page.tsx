@@ -2,15 +2,14 @@
 
 import { useState } from 'react';
 import { SignedIn, SignedOut } from '@clerk/nextjs';
-import { Save, Plus, Trash2, ArrowLeft, Edit3, X } from 'lucide-react';
+import { Save, Plus, Trash2, ArrowLeft, X } from 'lucide-react';
 import Link from 'next/link';
 import { useDogs, Dog } from '@/hooks/useDogs';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import ErrorMessage from '@/components/ErrorMessage';
 
 export default function SettingsPage() {
-  const { dogs, isLoading, error: dogsError, addDog, updateDog, deleteDog } = useDogs();
-  const [editingDog, setEditingDog] = useState<Dog | null>(null);
+  const { dogs, isLoading, error: dogsError, addDog, deleteDog } = useDogs();
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState({ name: '', picture_url: '' });
   const [isSaving, setIsSaving] = useState(false);
@@ -29,7 +28,6 @@ export default function SettingsPage() {
 
   const resetForm = () => {
     setFormData({ name: '', picture_url: '' });
-    setEditingDog(null);
     setShowAddForm(false);
   };
 
@@ -54,29 +52,10 @@ export default function SettingsPage() {
     setIsSaving(false);
   };
 
-  const handleUpdateDog = async () => {
-    if (!editingDog || !formData.name.trim()) {
-      setError('Dog name is required');
-      return;
-    }
 
-    setIsSaving(true);
-    clearMessages();
-
-    const result = await updateDog(editingDog.id, formData.name.trim(), formData.picture_url.trim() || undefined);
-    
-    if (result) {
-      showSuccess('Dog updated successfully!');
-      resetForm();
-    } else {
-      setError(dogsError || 'Failed to update dog');
-    }
-
-    setIsSaving(false);
-  };
 
   const handleDeleteDog = async (dogId: string) => {
-    if (!confirm('Are you sure you want to delete this dog? This action cannot be undone.')) {
+    if (!confirm('Are you sure you want to delete this dog? This action cannot be undone and will delete all associated poop logs.')) {
       return;
     }
 
@@ -90,16 +69,10 @@ export default function SettingsPage() {
     }
   };
 
-  const startEditing = (dog: Dog) => {
-    setEditingDog(dog);
-    setFormData({ name: dog.name, picture_url: dog.picture_url || '' });
-    setShowAddForm(false);
-    clearMessages();
-  };
+
 
   const startAdding = () => {
     setShowAddForm(true);
-    setEditingDog(null);
     setFormData({ name: '', picture_url: '' });
     clearMessages();
   };
@@ -191,12 +164,6 @@ export default function SettingsPage() {
                         {/* Actions */}
                         <div className="flex gap-2">
                           <button
-                            onClick={() => startEditing(dog)}
-                            className="text-[var(--accent-green)] hover:text-[var(--accent-green-hover)] p-2 rounded-sketch hover:bg-[var(--background)] transition-colors duration-300"
-                          >
-                            <Edit3 className="w-4 h-4" />
-                          </button>
-                          <button
                             onClick={() => handleDeleteDog(dog.id)}
                             className="text-red-500 hover:text-red-600 p-2 rounded-sketch hover:bg-[var(--background)] transition-colors duration-300"
                           >
@@ -216,12 +183,12 @@ export default function SettingsPage() {
               )}
             </div>
 
-            {/* Add/Edit Form */}
-            {(showAddForm || editingDog) && (
+            {/* Add Form */}
+            {showAddForm && (
               <div className="bg-[var(--accent-light)] border-[1.5px] border-[var(--border-soft)] rounded-sketch p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-lg font-zen font-light text-[var(--foreground)] tracking-wide">
-                    {editingDog ? 'Edit Dog' : 'Add New Dog'}
+                    Add New Dog
                   </h3>
                   <button
                     onClick={resetForm}
@@ -266,12 +233,12 @@ export default function SettingsPage() {
 
                   <div className="flex gap-3 pt-4">
                     <button
-                      onClick={editingDog ? handleUpdateDog : handleAddDog}
+                      onClick={handleAddDog}
                       disabled={isSaving || !formData.name.trim()}
                       className="bg-[var(--accent-green)] hover:bg-[var(--accent-green-hover)] disabled:bg-[var(--foreground-lighter)] text-[var(--background)] font-noto font-light py-3 px-6 text-base transition-all duration-300 ease-out rounded-xl relative hover:transform hover:translate-y-[-1px] hover:shadow-lg hover:shadow-[var(--accent-green)]/20 flex items-center justify-center gap-2 border-0 min-w-[120px]"
                     >
                       <Save className="w-4 h-4" />
-                      {isSaving ? 'Saving...' : (editingDog ? 'Update Dog' : 'Add Dog')}
+                      {isSaving ? 'Saving...' : 'Add Dog'}
                     </button>
 
                     <button
@@ -293,7 +260,8 @@ export default function SettingsPage() {
               <ul className="space-y-2 text-sm text-lighter font-noto font-light list-disc list-inside">
                 <li>Your dog profile is saved to your account and synced across devices</li>
                 <li>Currently limited to one dog per account</li>
-                <li>You can edit or delete your dog profile at any time</li>
+                <li>You can delete your dog profile at any time</li>
+                <li>Dog names cannot be edited after creation to maintain data consistency</li>
               </ul>
             </div>
           </div>

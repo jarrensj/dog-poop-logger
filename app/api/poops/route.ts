@@ -62,16 +62,29 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { dog_name, location, notes, photo_url, poop_time } = body
+    const { dog_id, dog_name, location, notes, photo_url, poop_time } = body
 
     // Validate required fields
-    if (!dog_name) {
-      return NextResponse.json({ error: 'Dog name is required' }, { status: 400 })
+    if (!dog_id) {
+      return NextResponse.json({ error: 'Dog ID is required' }, { status: 400 })
+    }
+
+    // Verify the dog belongs to the user
+    const { data: dog, error: dogError } = await supabase
+      .from('dogs')
+      .select('id, name')
+      .eq('id', dog_id)
+      .eq('user_id', userId)
+      .single()
+
+    if (dogError || !dog) {
+      return NextResponse.json({ error: 'Dog not found or does not belong to user' }, { status: 404 })
     }
 
     const poopData = {
       user_id: userId, // Use Clerk user ID directly
-      dog_name,
+      dog_id,
+      dog_name: dog.name, // Keep dog_name for backwards compatibility and easier queries
       location: location || null,
       notes: notes || null,
       photo_url: photo_url || null,

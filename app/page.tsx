@@ -53,6 +53,7 @@ export default function Home() {
       <SignedIn>
         <div className="bg-[var(--background)] sketch-border soft-shadow p-6 sm:p-8 md:p-12 max-w-4xl w-full mx-4 sm:mx-0 fade-in">
           <PoopLogger 
+            dogId={primaryDog?.id}
             dogName={primaryDog?.name || 'My Dog'}
             onLogPoop={logPoop}
             isLoading={isLoading}

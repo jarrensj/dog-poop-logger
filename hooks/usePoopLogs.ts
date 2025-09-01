@@ -39,7 +39,7 @@ export const usePoopLogs = () => {
     }
   };
 
-  const logPoop = async (dogName: string, poopTime?: string) => {
+  const logPoop = async (dogId: string, poopTime?: string) => {
     if (!user) {
       setError('Please sign in to log poops.');
       return false;
@@ -55,7 +55,7 @@ export const usePoopLogs = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          dog_name: dogName,
+          dog_id: dogId,
           location: '',
           notes: '',
           poop_time: poopTime,

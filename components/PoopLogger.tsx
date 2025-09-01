@@ -5,13 +5,15 @@ import { Clock } from 'lucide-react';
 import { useAdvancedMode } from '@/hooks/useAdvancedMode';
 
 interface PoopLoggerProps {
+  dogId?: string;
   dogName: string;
-  onLogPoop: (dogName: string, poopTime?: string) => Promise<boolean>;
+  onLogPoop: (dogId: string, poopTime?: string) => Promise<boolean>;
   isLoading: boolean;
   selectedDate?: Date;
 }
 
 export default function PoopLogger({ 
+  dogId,
   dogName, 
   onLogPoop, 
   isLoading, 
@@ -31,9 +33,13 @@ export default function PoopLogger({
   } = useAdvancedMode(selectedDate);
 
   const handleLogPoop = async () => {
+    if (!dogId) {
+      return; // Should not happen due to disabled button, but safety check
+    }
+
     setIsCelebrating(true);
     
-    const success = await onLogPoop(dogName, getCustomDateTime());
+    const success = await onLogPoop(dogId, getCustomDateTime());
     
     if (success && isAdvancedMode) {
       resetAdvancedMode();
@@ -44,6 +50,23 @@ export default function PoopLogger({
       setIsCelebrating(false);
     }, 1200);
   };
+
+  if (!dogId) {
+    return (
+      <div className="text-center mb-6 sm:mb-8">
+        <p className="text-lg sm:text-xl mb-4 text-lighter font-noto font-light">Add a dog to start logging poops</p>
+        <div className="bg-[var(--accent-light)] border-[1.5px] border-[var(--border-soft)] rounded-sketch p-6 mb-4">
+          <div className="text-6xl mb-4">🐕</div>
+          <p className="text-base text-lighter font-noto font-light mb-4">
+            You need to add a dog profile before you can log poops.
+          </p>
+          <p className="text-sm text-lightest font-noto font-light">
+            Go to Settings to add your first dog!
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="text-center mb-6 sm:mb-8">

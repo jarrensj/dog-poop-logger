@@ -244,7 +244,8 @@ export default function SettingsPage() {
                     />
                   </div>
 
-                  <div>
+                  {/* Picture URL field hidden for now */}
+                  {/* <div>
                     <label className="block text-sm font-noto font-light text-[var(--foreground)] mb-2">
                       Picture URL (optional)
                     </label>
@@ -259,7 +260,7 @@ export default function SettingsPage() {
                     <p className="text-xs text-lighter mt-2 font-noto font-light">
                       Add a photo URL to display your dog's picture
                     </p>
-                  </div>
+                  </div> */}
 
                   <div className="flex gap-3 pt-4">
                     <button
@@ -289,7 +290,6 @@ export default function SettingsPage() {
               </h3>
               <ul className="space-y-2 text-sm text-lighter font-noto font-light list-disc list-inside">
                 <li>Dogs are saved to your account and synced across devices</li>
-                <li>Add photos by providing a URL to an image</li>
                 <li>The first dog in your list will be used by default for logging</li>
                 <li>You can edit or delete dogs at any time</li>
               </ul>

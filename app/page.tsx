@@ -45,7 +45,14 @@ export default function Home() {
 
   return (
     <main className="min-h-[calc(100vh-80px)] px-4 sm:px-6 pt-0 pb-4 sm:pb-6 flex flex-col items-center justify-start textured-bg">
-      <h1 className="text-3xl sm:text-4xl md:text-5xl font-zen font-light mb-6 sm:mb-8 text-[var(--foreground)] text-center tracking-wide">dog poop logger</h1>
+      <div className="flex flex-col items-center mb-6 sm:mb-8">
+        <div className="flex items-center gap-3">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-zen font-light text-[var(--foreground)] text-center tracking-wide">dog poop logger</h1>
+          <span className="bg-[var(--accent-green)] text-[var(--background)] text-xs sm:text-sm font-noto font-medium px-2 py-1 rounded-full uppercase tracking-wide">
+            wip
+          </span>
+        </div>
+      </div>
       
       {/* Error Message */}
       {error && <ErrorMessage message={error} />}

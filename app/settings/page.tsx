@@ -123,7 +123,7 @@ export default function SettingsPage() {
         </div>
 
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-zen font-light mb-6 sm:mb-8 text-[var(--foreground)] text-center tracking-wide">
-          Manage Your Dogs
+          Manage Your Dog
         </h1>
       </div>
 
@@ -144,15 +144,17 @@ export default function SettingsPage() {
             <div>
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl sm:text-2xl font-zen font-light text-[var(--foreground)] tracking-wide">
-                  Your Dogs
+                  Your Dog
                 </h2>
-                <button
-                  onClick={startAdding}
-                  className="bg-[var(--accent-green)] hover:bg-[var(--accent-green-hover)] text-[var(--background)] font-noto font-light py-2 px-4 text-sm transition-all duration-300 ease-out rounded-xl relative hover:transform hover:translate-y-[-1px] hover:shadow-lg hover:shadow-[var(--accent-green)]/20 flex items-center gap-2 border-0"
-                >
-                  <Plus className="w-4 h-4" />
-                  Add Dog
-                </button>
+                {dogs.length === 0 && (
+                  <button
+                    onClick={startAdding}
+                    className="bg-[var(--accent-green)] hover:bg-[var(--accent-green-hover)] text-[var(--background)] font-noto font-light py-2 px-4 text-sm transition-all duration-300 ease-out rounded-xl relative hover:transform hover:translate-y-[-1px] hover:shadow-lg hover:shadow-[var(--accent-green)]/20 flex items-center gap-2 border-0"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Add Dog
+                  </button>
+                )}
               </div>
 
               {/* Dogs Grid */}
@@ -208,8 +210,8 @@ export default function SettingsPage() {
               ) : (
                 <div className="text-center py-12 bg-[var(--accent-light)] border-[1.5px] border-[var(--border-soft)] rounded-sketch">
                   <div className="text-6xl mb-4">🐕</div>
-                  <p className="text-lg text-lighter font-noto font-light mb-4">No dogs added yet</p>
-                  <p className="text-sm text-lightest font-noto font-light">Add your first dog to start logging poops!</p>
+                  <p className="text-lg text-lighter font-noto font-light mb-4">No dog added yet</p>
+                  <p className="text-sm text-lightest font-noto font-light">Add your dog to start logging poops!</p>
                 </div>
               )}
             </div>
@@ -286,12 +288,12 @@ export default function SettingsPage() {
             {/* Info Section */}
             <div className="bg-[var(--accent-light)] border-[1.5px] border-[var(--border-soft)] rounded-sketch p-4 sm:p-6">
               <h3 className="text-lg font-zen font-light text-[var(--foreground)] mb-3 tracking-wide">
-                About Your Dogs
+                About Your Dog
               </h3>
               <ul className="space-y-2 text-sm text-lighter font-noto font-light list-disc list-inside">
-                <li>Dogs are saved to your account and synced across devices</li>
-                <li>The first dog in your list will be used by default for logging</li>
-                <li>You can edit or delete dogs at any time</li>
+                <li>Your dog profile is saved to your account and synced across devices</li>
+                <li>Currently limited to one dog per account</li>
+                <li>You can edit or delete your dog profile at any time</li>
               </ul>
             </div>
           </div>

@@ -6,7 +6,6 @@ import { useAdvancedMode } from '@/hooks/useAdvancedMode';
 
 interface PoopLoggerProps {
   dogName: string;
-  setDogName: (name: string) => void;
   onLogPoop: (dogName: string, poopTime?: string) => Promise<boolean>;
   isLoading: boolean;
   selectedDate?: Date;
@@ -14,7 +13,6 @@ interface PoopLoggerProps {
 
 export default function PoopLogger({ 
   dogName, 
-  setDogName, 
   onLogPoop, 
   isLoading, 
   selectedDate 
@@ -49,21 +47,7 @@ export default function PoopLogger({
 
   return (
     <div className="text-center mb-6 sm:mb-8">
-      <p className="text-lg sm:text-xl mb-4 text-lighter font-noto font-light">Track your dog&apos;s poops</p>
-      
-      {/* Dog Name Input */}
-      <div className="max-w-xs mx-auto mb-6">
-        <label className="block text-sm font-noto font-light text-[var(--foreground)] mb-2">
-          Dog Name
-        </label>
-        <input
-          type="text"
-          value={dogName}
-          onChange={(e) => setDogName(e.target.value)}
-          className="w-full px-4 py-2 border-[1.5px] border-[var(--border-soft)] rounded-sketch focus:outline-none focus:border-[var(--accent-green)] bg-[var(--background)] text-[var(--foreground)] text-center font-light transition-colors duration-300"
-          placeholder="Enter dog name"
-        />
-      </div>
+      <p className="text-lg sm:text-xl mb-4 text-lighter font-noto font-light">Track {dogName}&apos;s poops</p>
 
       <div className="flex flex-col items-center">
         <div className="relative">

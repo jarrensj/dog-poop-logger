@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { SignedIn, SignedOut } from '@clerk/nextjs';
 import { usePoopLogs } from '@/hooks/usePoopLogs';
+import { useDogs } from '@/hooks/useDogs';
 import { getPoopsThisMonth } from '@/utils/dateUtils';
 import PoopLogger from '@/components/PoopLogger';
 import PoopCalendar from '@/components/PoopCalendar';
@@ -13,10 +14,10 @@ import ErrorMessage from '@/components/ErrorMessage';
 
 export default function Home() {
   const { poopLogs, isLoading, isLoadingData, error, logPoop, deletePoop } = usePoopLogs();
+  const { primaryDog, isLoading: isLoadingDogs } = useDogs();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [logToDelete, setLogToDelete] = useState<string | null>(null);
-  const [dogName, setDogName] = useState('My Dog');
 
   const openDeleteModal = (logId: string) => {
     setLogToDelete(logId);
@@ -38,7 +39,7 @@ export default function Home() {
   };
 
   // Show loading spinner while data is loading
-  if (isLoadingData) {
+  if (isLoadingData || isLoadingDogs) {
     return <LoadingSpinner />;
   }
 
@@ -52,8 +53,7 @@ export default function Home() {
       <SignedIn>
         <div className="bg-[var(--background)] sketch-border soft-shadow p-6 sm:p-8 md:p-12 max-w-4xl w-full mx-4 sm:mx-0 fade-in">
           <PoopLogger 
-            dogName={dogName}
-            setDogName={setDogName}
+            dogName={primaryDog?.name || 'My Dog'}
             onLogPoop={logPoop}
             isLoading={isLoading}
             selectedDate={selectedDate}

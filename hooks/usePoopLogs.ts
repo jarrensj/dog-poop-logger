@@ -41,8 +41,8 @@ export const usePoopLogs = () => {
         const poops = logsData.poops || [];
         setPoopLogs(poops);
         
-        // Cache the data for 3 hours
-        apiCache.set(cacheKey, poops, 3 * 60);
+        // Cache for 30 days
+        apiCache.set(cacheKey, poops, 30 * 24 * 60);
       } else {
         setError('Failed to load poop logs. Please refresh the page.');
       }

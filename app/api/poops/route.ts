@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
     const poopData = {
       user_id: userId, // Use Clerk user ID directly
       dog_id,
-      dog_name: dog.name, // Keep dog_name for backwards compatibility and easier queries
+      dog_name: dog.name, // Store dog name for easier queries without JOINs
       location: location || null,
       notes: notes || null,
       photo_url: photo_url || null,

@@ -29,13 +29,15 @@ export const useDogs = () => {
   }, [isLoaded, user]);
 
   const loadDogs = async () => {
+    if (!user?.id) return;
+    
     try {
       setIsLoading(true);
       setError(null);
 
       // Check cache first
-      const cacheKey = `dogs_${user?.id}`;
-      const cachedData = apiCache.get(cacheKey);
+      const cacheKey = `dogs_${user.id}`;
+      const cachedData = apiCache.get<Dog[]>(cacheKey);
       
       if (cachedData) {
         setDogs(cachedData);

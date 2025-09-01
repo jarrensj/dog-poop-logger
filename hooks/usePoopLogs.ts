@@ -21,13 +21,15 @@ export const usePoopLogs = () => {
   const [error, setError] = useState<string | null>(null);
 
   const loadPoopLogs = async () => {
+    if (!user?.id) return;
+    
     try {
       setIsLoadingData(true);
       setError(null);
 
       // Check cache first
-      const cacheKey = `poops_${user?.id}`;
-      const cachedData = apiCache.get(cacheKey);
+      const cacheKey = `poops_${user.id}`;
+      const cachedData = apiCache.get<PoopLog[]>(cacheKey);
       
       if (cachedData) {
         setPoopLogs(cachedData);

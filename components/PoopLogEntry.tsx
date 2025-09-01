@@ -16,7 +16,7 @@ export default function PoopLogEntry({ log, onDelete }: PoopLogEntryProps) {
     <div className="bg-[var(--background)] rounded-sketch p-4 mb-3 softer-shadow border-l-4 border-[var(--accent-green)]">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
         <div className="flex-1">
-          <p className="font-noto font-light text-[var(--foreground)] text-lg">Poop logged!</p>
+          <p className="font-noto font-light text-[var(--foreground)] text-lg">{log.dog_name} pooped</p>
           <p className="text-lighter text-sm font-noto font-light">at {time}</p>
           <p className="text-lightest text-xs font-noto font-light">{relative}</p>
         </div>

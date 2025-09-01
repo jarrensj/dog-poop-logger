@@ -5,16 +5,16 @@ import { Clock } from 'lucide-react';
 import { useAdvancedMode } from '@/hooks/useAdvancedMode';
 
 interface PoopLoggerProps {
+  dogId?: string;
   dogName: string;
-  setDogName: (name: string) => void;
-  onLogPoop: (dogName: string, poopTime?: string) => Promise<boolean>;
+  onLogPoop: (dogId: string, poopTime?: string) => Promise<boolean>;
   isLoading: boolean;
   selectedDate?: Date;
 }
 
 export default function PoopLogger({ 
+  dogId,
   dogName, 
-  setDogName, 
   onLogPoop, 
   isLoading, 
   selectedDate 
@@ -33,9 +33,13 @@ export default function PoopLogger({
   } = useAdvancedMode(selectedDate);
 
   const handleLogPoop = async () => {
+    if (!dogId) {
+      return; // Should not happen due to disabled button, but safety check
+    }
+
     setIsCelebrating(true);
     
-    const success = await onLogPoop(dogName, getCustomDateTime());
+    const success = await onLogPoop(dogId, getCustomDateTime());
     
     if (success && isAdvancedMode) {
       resetAdvancedMode();
@@ -47,23 +51,26 @@ export default function PoopLogger({
     }, 1200);
   };
 
+  if (!dogId) {
+    return (
+      <div className="text-center mb-6 sm:mb-8">
+        <p className="text-lg sm:text-xl mb-4 text-lighter font-noto font-light">Add a dog to start logging poops</p>
+        <div className="bg-[var(--accent-light)] border-[1.5px] border-[var(--border-soft)] rounded-sketch p-6 mb-4">
+          <div className="text-6xl mb-4">🐕</div>
+          <p className="text-base text-lighter font-noto font-light mb-4">
+            You need to add a dog profile before you can log poops.
+          </p>
+          <p className="text-sm text-lightest font-noto font-light">
+            Go to Settings to add your first dog!
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="text-center mb-6 sm:mb-8">
-      <p className="text-lg sm:text-xl mb-4 text-lighter font-noto font-light">Track your dog&apos;s poops</p>
-      
-      {/* Dog Name Input */}
-      <div className="max-w-xs mx-auto mb-6">
-        <label className="block text-sm font-noto font-light text-[var(--foreground)] mb-2">
-          Dog Name
-        </label>
-        <input
-          type="text"
-          value={dogName}
-          onChange={(e) => setDogName(e.target.value)}
-          className="w-full px-4 py-2 border-[1.5px] border-[var(--border-soft)] rounded-sketch focus:outline-none focus:border-[var(--accent-green)] bg-[var(--background)] text-[var(--foreground)] text-center font-light transition-colors duration-300"
-          placeholder="Enter dog name"
-        />
-      </div>
+      <p className="text-lg sm:text-xl mb-4 text-lighter font-noto font-light">Track {dogName}&apos;s poops</p>
 
       <div className="flex flex-col items-center">
         <div className="relative">
